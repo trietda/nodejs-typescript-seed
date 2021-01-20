@@ -1,0 +1,16 @@
+{
+  "exclude": [
+    "__tests__",
+    "**/*/__mocks__"
+  ],
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../build/infra",
+    "composite": true
+  },
+  "references": [
+    { "path": "../common" },
+    { "path": "../core" }
+  ]
+}

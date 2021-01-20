@@ -1,0 +1,19 @@
+{
+  "service": {
+    "id": "testService1",
+    "name": "testService"
+  },
+  "database": {
+    "pool": {
+      "min": 1,
+      "max": 1
+    },
+    "debug": false
+  },
+  "rabbitMQ": {
+    "rpcTimeout": 500
+  },
+  "mqtt": {
+    "rpcTimeout": 500
+  }
+}

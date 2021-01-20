@@ -1,0 +1,14 @@
+{
+  "extends": "../.eslintrc.test.json",
+  "parserOptions": {
+    "tsconfigRootDir": "./__tests__",
+    "project": [
+      "./tsconfig.test.json",
+      "../src/tsconfig.test.json",
+      "../src/common/tsconfig.test.json",
+      "../src/core/tsconfig.test.json",
+      "../src/infra/tsconfig.test.json",
+      "../src/web/tsconfig.test.json"
+    ]
+  }
+}

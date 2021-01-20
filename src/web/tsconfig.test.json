@@ -1,0 +1,13 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../build/web",
+    "composite": true
+  },
+  "references": [
+    { "path": "../common/tsconfig.test.json" },
+    { "path": "../core/tsconfig.test.json" },
+    { "path": "../infra/tsconfig.test.json" }
+  ]
+}

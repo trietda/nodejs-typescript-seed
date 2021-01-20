@@ -1,0 +1,16 @@
+{
+  "exclude": [
+    "__tests__"
+  ],
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../build/web",
+    "composite": true
+  },
+  "references": [
+    { "path": "../common" },
+    { "path": "../core" },
+    { "path": "../infra" }
+  ]
+}

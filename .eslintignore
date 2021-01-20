@@ -1,0 +1,8 @@
+# Build
+build
+
+# Jest config
+jest.config.js
+
+# Environment
+.env

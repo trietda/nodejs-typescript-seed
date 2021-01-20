@@ -1,0 +1,13 @@
+{
+  "include": [
+    "./__mocks__",
+    "./index.ts"
+  ],
+  "extends": "../tsconfig.base.json",
+  "references": [
+    { "path": "./common/tsconfig.test.json" },
+    { "path": "./core/tsconfig.test.json" },
+    { "path": "./infra/tsconfig.test.json" },
+    { "path": "./web/tsconfig.test.json" }
+  ]
+}

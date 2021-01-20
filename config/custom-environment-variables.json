@@ -1,0 +1,55 @@
+{
+  "service": {
+    "id": "SERVICE_ID",
+    "name": "SERVICE_NAME"
+  },
+  "server": {
+    "port": {
+      "__name": "SERVER_PORT",
+      "__format": "number"
+    }
+  },
+  "jwt": {
+    "secret": "JWT_SECRET",
+    "expireTime": {
+      "__name": "JWT_EXPIRE_TIME",
+      "__format": "number"
+    }
+  },
+  "database": {
+    "database": "DATABASE_DATABASE",
+    "host": "DATABASE_HOST",
+    "port": "DATABASE_PORT",
+    "user": "DATABASE_USER",
+    "password": "DATABASE_PASSWORD",
+    "pool": {
+      "min": {
+        "__name": "DATABASE_POOL_MIN",
+        "__format": "number"
+      },
+      "max": {
+        "__name": "DATABASE_POOL_MAX",
+        "__format": "number"
+      }
+    }
+  },
+  "rabbitMQ": {
+    "url": "RABBITMQ_URL",
+    "rpcTimeout": {
+      "__name": "RABBITMQ_RPC_TIMEOUT",
+      "__format": "number"
+    }
+  },
+  "mqtt": {
+    "url": "MQTT_URL",
+    "clientId": "MQTT_CLIENT_ID",
+    "clean": {
+      "__name": "MQTT_CLEAN",
+      "__format": "boolean"
+    },
+    "rpcTimeout": {
+      "__name": "MQTT_RPC_TIMEOUT",
+      "__format": "number"
+    }
+  }
+}

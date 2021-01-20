@@ -1,0 +1,9 @@
+{
+  "env": {
+    "es2021": true,
+    "jest": true
+  },
+  "rules": {
+    "max-classes-per-file": "off"
+  }
+}

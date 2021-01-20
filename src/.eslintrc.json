@@ -1,0 +1,12 @@
+{
+  "parserOptions": {
+    "tsconfigRootDir": "./src",
+    "project": [
+      "./tsconfig.test.json",
+      "./common/tsconfig.test.json",
+      "./core/tsconfig.test.json",
+      "./infra/tsconfig.test.json",
+      "./web/tsconfig.test.json"
+    ]
+  }
+}

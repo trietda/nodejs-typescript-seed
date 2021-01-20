@@ -1,0 +1,14 @@
+{
+  "exclude": [
+    "__tests__"
+  ],
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "rootDir": ".",
+    "outDir": "../../build/core",
+    "composite": true
+  },
+  "references": [
+    { "path": "../common" }
+  ]
+}

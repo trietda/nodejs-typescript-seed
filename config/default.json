@@ -1,0 +1,41 @@
+{
+  "service": {
+    "id": "local",
+    "name": "seed"
+  },
+  "server": {
+    "port": 3000
+  },
+  "cors": {
+    "origin": "*",
+    "allowedHeaders": ""
+  },
+  "jwt": {
+    "secret": "guessWhat",
+    "expireTime": 3600
+  },
+  "database": {
+    "host": "127.0.0.1",
+    "port": "3306",
+    "user": "root",
+    "password": "",
+    "database": "seed",
+    "pool": {
+      "min": 5,
+      "max": 10
+    },
+    "debug": false
+  },
+  "rabbitMQ": {
+    "url": "amqp://localhost",
+    "rpcTimeout": 1000
+  },
+  "mqtt": {
+    "url": "mqtt://username:password@localhost",
+    "protocolId": "MQTT",
+    "protocolVersion": 5,
+    "clientId": "local",
+    "clean": true,
+    "rpcTimeout": 1000
+  }
+}
