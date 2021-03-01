@@ -4,6 +4,7 @@ module.exports = {
       displayName: 'unit',
       preset: 'ts-jest',
       testEnvironment: 'node',
+      clearMocks: true,
       globals: {
         'ts-jest': {
           tsconfig: 'src/tsconfig.test.json',

@@ -1,6 +1,6 @@
 import IIntegrationEventStrategy from './IIntegrationEventStrategy';
 import IntegrationEvent from '../IntegrationEvent';
-import Mqtt from '../mqtt';
+import { Mqtt } from '../mqtt';
 import IIntegrationEventHandler from './IIntegrationEventHandler';
 
 export default class MqttEventStrategy implements IIntegrationEventStrategy {

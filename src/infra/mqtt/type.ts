@@ -1,3 +1,5 @@
+import BaseError from '../../common/error/BaseError';
+
 export type Message = {
   payload: Payload,
 };
@@ -11,7 +13,7 @@ export type NormalPayload = {
 export type ResponsePayload = {
   isSuccess: boolean,
   data?: object,
-  error?: Error,
+  error?: BaseError,
 };
 
 export type PublishOptions = {
