@@ -2,13 +2,17 @@ import { EventEmitter } from 'events';
 import config from 'config';
 import { IPublishPacket } from 'async-mqtt';
 import { v4 as UuidV4 } from 'uuid';
+import { Message, Mqtt, V3Message } from '../mqtt';
+import { NormalPayload, ResponsePayload } from '../mqtt/type';
+import { MqttResponseError } from '../error';
 import IRpcStrategy from './IRpcStrategy';
-import { Message, Mqtt } from '../mqtt';
 import RpcCommand from './RpcCommand';
 import IRpcHandler from './IRpcHandler';
-import { V3Message } from '../mqtt/V3PublishStrategy';
+import { MqttMessageMapper } from '../mapper';
 
-export type MqttRequestResolver = (payload: object) => void;
+export type MqttRequestResolve = (payload: object) => void;
+
+export type MqttResponseReject = (error: MqttResponseError) => void;
 
 export default class MqttRpcStrategy implements IRpcStrategy {
   private readonly responseTopicName: string;
@@ -24,23 +28,23 @@ export default class MqttRpcStrategy implements IRpcStrategy {
   }
 
   async init() {
-    const handleResponse = async (payload: Message | V3Message, packet: IPublishPacket) => {
-      const correlationId = MqttRpcStrategy.getCorrelationId(payload, packet);
+    const handleResponse = async (message: Message | V3Message, packet: IPublishPacket) => {
+      const correlationId = MqttRpcStrategy.getCorrelationId(message, packet);
 
       if (!correlationId) {
-        global.logger?.warn('No correlation ID', payload);
+        global.logger?.warn('No correlation ID', message);
         return;
       }
 
-      this.eventEmitter.emit(correlationId, payload.data, packet);
+      this.eventEmitter.emit(correlationId, message, packet);
     };
     await this.mqtt.subscribe(this.responseTopicName, handleResponse);
   }
 
-  async request(command: RpcCommand, payload: object): Promise<object | undefined> {
+  async request(command: RpcCommand, payloadData: object): Promise<object | undefined> {
     const correlationId = MqttRpcStrategy.generateCorrelationId();
 
-    const promise = new Promise((resolve: MqttRequestResolver, reject) => {
+    const promise = new Promise((resolve: MqttRequestResolve, reject: MqttResponseReject) => {
       const rejectTimeout = setTimeout(
         () => {
           reject(new Error('request timeout'));
@@ -48,15 +52,22 @@ export default class MqttRpcStrategy implements IRpcStrategy {
         config.get<number>('mqtt.rpcTimeout'),
       );
 
-      this.eventEmitter.once(correlationId, (responsePayload: object) => {
+      this.eventEmitter.once(correlationId, (message: Message | V3Message) => {
         clearTimeout(rejectTimeout);
-        resolve(responsePayload);
+
+        const responsePayload = message.payload as ResponsePayload;
+
+        if (!responsePayload.isSuccess) {
+          reject(MqttMessageMapper.toError(responsePayload.error));
+        }
+
+        resolve(responsePayload.data ?? {});
       });
     });
 
     const publishTopic = MqttRpcStrategy.getPublishTopic(command);
-    const message: Message = { data: payload };
-    await this.mqtt.publish(publishTopic, message, {
+    const messagePayload: NormalPayload = { data: payloadData };
+    await this.mqtt.publish(publishTopic, messagePayload, {
       correlationId,
       responseTopic: this.responseTopicName,
     });
@@ -81,9 +92,17 @@ export default class MqttRpcStrategy implements IRpcStrategy {
           global.logger?.warn('No correlation ID', message);
           return;
         }
-        const responseMessagePayload = await handle.handle(command, message.data);
-        const responseMessage: Message = { data: responseMessagePayload };
-        await this.mqtt.publish(responseTopic, responseMessage);
+
+        const responseMessagePayload: ResponsePayload = { isSuccess: true };
+
+        try {
+          responseMessagePayload.data = await handle.handle(command, message.payload.data ?? {});
+        } catch (err) {
+          responseMessagePayload.isSuccess = false;
+          responseMessagePayload.error = err;
+        } finally {
+          await this.mqtt.publish(responseTopic, responseMessagePayload);
+        }
       } catch (err) {
         global.logger?.error(err);
       }

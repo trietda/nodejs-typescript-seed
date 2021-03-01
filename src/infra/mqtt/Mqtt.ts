@@ -4,8 +4,9 @@ import { EventEmitter } from 'events';
 import { Singleton } from '../../common';
 import PublishStrategy from './PublishStrategy';
 import PublishStrategyFactory from './PublishStrategyFactory';
-import { Message, PublishOptions } from './type';
+import { Message, Payload, PublishOptions } from './type';
 import { V3Message } from './V3PublishStrategy';
+import { MqttMessageMapper } from '../mapper';
 
 @Singleton
 export default class Mqtt {
@@ -42,8 +43,9 @@ export default class Mqtt {
     });
     client.on('message', (topic, messageBuffer, packet) => {
       try {
-        const payload = JSON.parse(messageBuffer.toString());
-        this.eventEmitter.emit(topic, payload, packet);
+        const json = JSON.parse(messageBuffer.toString());
+        const message = MqttMessageMapper.toMessage(json);
+        this.eventEmitter.emit(topic, message, packet);
       } catch (err) {
         global.logger?.error(err);
       }
@@ -69,12 +71,12 @@ export default class Mqtt {
     this.eventEmitter.on(topic, handler);
   }
 
-  async publish(topic: string, payload: object, options?: PublishOptions) {
+  async publish(topic: string, payload: Payload, options?: PublishOptions) {
     if (!this.client) {
       throw new Error('client not initialized');
     }
 
-    const message: Message = { data: payload };
+    const message: Message = { payload };
     this.publishStrategy?.publish(topic, message, options);
   }
 }

@@ -1,6 +1,6 @@
 import EventEmitter from 'events';
 import { IPublishPacket } from 'async-mqtt';
-import { Message, PublishOptions } from '../type';
+import { Message, Payload, PublishOptions } from '../type';
 
 export default jest.fn().mockImplementation(() => {
   const eventEmitter = new EventEmitter();
@@ -8,7 +8,7 @@ export default jest.fn().mockImplementation(() => {
   return {
     init: jest.fn(),
     publish: jest.fn().mockImplementation(
-      (topic: string, payload: object, options?: PublishOptions) => {
+      (topic: string, payload: Payload, options?: PublishOptions) => {
         const packet: Partial<IPublishPacket> = {
           properties: {
             responseTopic: options?.responseTopic,
@@ -17,7 +17,7 @@ export default jest.fn().mockImplementation(() => {
               : undefined,
           },
         };
-        const message: Message = { data: payload };
+        const message: Message = { payload };
         eventEmitter.emit(topic, message, packet);
       },
     ),
